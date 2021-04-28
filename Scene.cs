@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RT
@@ -232,6 +233,21 @@ namespace RT
             {
                 Console.WriteLine("No lights in scene, this will always produce a black image.");
             }
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            ParallelOptions po = new ParallelOptions();
+            po.CancellationToken = cts.Token;
+            po.MaxDegreeOfParallelism = System.Environment.ProcessorCount;
+
+            _ = Parallel.For(0, camera.vSize * camera.hSize, po, (i, loopState) =>
+            {
+                 int y = i / camera.hSize, x = i % camera.hSize;
+                 Ray temp = this.RayForPixel(camera, x, y);
+                 Color pixelColor = this.ColorAt(temp);
+                 canvas.SetPixel(x, y, pixelColor);
+                 
+            });
+            return canvas;
 
             for (int y = 0; y < camera.vSize; y++)
             {
