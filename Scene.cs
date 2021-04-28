@@ -248,19 +248,6 @@ namespace RT
                  
             });
             return canvas;
-
-            for (int y = 0; y < camera.vSize; y++)
-            {
-                for (int x = 0; x < camera.hSize; x++)
-                {
-                    Console.WriteLine(x.ToString() + ',' + y.ToString());
-                    Ray temp = this.RayForPixel(camera, x, y);
-                    Color pixelColor = this.CheckAABB(temp);
-                    //Blend the colors to allow for transparency among the cubes and layering
-                    canvas.SetPixel(x, y, canvas.GetPixel(x, y) + pixelColor);
-                }
-            }
-            return canvas;
         }
 
         public Color CheckAABB(Ray ray, int remaining = 1)
